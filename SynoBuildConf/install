@@ -1,0 +1,39 @@
+#!/bin/bash
+# Copyright (c) 2000-2015 Synology Inc. All rights reserved.
+
+PKG_NAME="autossh"
+INST_DIR="/tmp/_${PKG_NAME}"
+PKG_DIR="/tmp/_${PKG_NAME}_pkg"
+PKG_DEST="/image/packages"
+
+PrepareDirs() {
+    for dir in $INST_DIR $PKG_DIR; do
+        rm -rf "$dir"
+    done
+    for dir in $INST_DIR $PKG_DIR $PKG_DEST; do
+        mkdir -p "$dir"
+    done
+}
+
+SetupPackageFiles() {
+    DESTDIR="${INST_DIR}" make install
+
+    ./INFO.sh > INFO
+    cp INFO "${PKG_DIR}"
+    cp -r scripts/ "${PKG_DIR}"
+}
+
+MakePackage() {
+    source /pkgscripts/include/pkg_util.sh
+    pkg_make_package $INST_DIR $PKG_DIR
+    pkg_make_spk $PKG_DIR $PKG_DEST
+}
+
+main() {
+    PrepareDirs
+    SetupPackageFiles
+    MakePackage 
+}
+
+main "$@"
+

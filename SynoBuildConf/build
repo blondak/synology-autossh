@@ -1,0 +1,18 @@
+#!/bin/sh
+# Copyright (c) 2000-2015 Synology Inc. All rights reserved.
+
+case ${MakeClean} in
+    [Yy][Ee][Ss])
+        make distclean
+        ;;
+esac
+
+#CFLAGS+="${CFLAGS}"
+#LDFLAGS+="${LDFLAGS}"
+
+#env CC="${CC}" AR=${AR} CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}" \
+env CC="${CC}" AR=${AR} ac_cv_func_malloc_0_nonnull=yes ac_cv_func_realloc_0_nonnull=yes \
+./configure ${ConfigOpt}
+
+make ${MAKE_FLAGS}
+
